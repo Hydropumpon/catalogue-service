@@ -54,6 +54,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Manufacturer getManufacturerById(Integer id) {
         return manufacturerRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MANUFACTURER_NOT_FOUND,

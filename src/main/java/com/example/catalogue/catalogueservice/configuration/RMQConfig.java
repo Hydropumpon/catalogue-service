@@ -26,28 +26,20 @@ public class RMQConfig {
     @Value("${rabbitmq.queues.order}")
     private String orderQueue;
 
-    @Value("${rabbitmq.exchanges.order")
+    @Value("${rabbitmq.exchanges.order}")
     private String orderExchange;
 
+    @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
     private MessageConverter messageConverter;
 
+    @Autowired
     private SimpleRabbitListenerContainerFactory containerFactory;
 
-    private RabbitAdmin rabbitAdmin;
-
     @Autowired
-    public RMQConfig(RabbitTemplate rabbitTemplate,
-                     MessageConverter messageConverter,
-                     SimpleRabbitListenerContainerFactory containerFactory,
-                     RabbitAdmin rabbitAdmin) {
-        this.rabbitTemplate = rabbitTemplate;
-        this.messageConverter = messageConverter;
-        this.containerFactory = containerFactory;
-        this.rabbitAdmin = rabbitAdmin;
-    }
-
+    private RabbitAdmin rabbitAdmin;
 
     @PostConstruct
     protected void init() {

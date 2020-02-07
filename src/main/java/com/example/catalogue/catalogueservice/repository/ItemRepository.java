@@ -40,7 +40,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     @Query(nativeQuery = true,
             value = "select it.price from item it " +
                     "where it.id in :ids " +
-                    "order by array_position(cast(string_to_array(rtrim(ltrim(" +
-                    "cast(:ids as text),'('),')'),',') as int[]), cast(it.id as int))")
-    List<BigDecimal> findByIdInOrdered(@Param("ids") List<Integer> ids);
+                    "order by array_position(cast(string_to_array(rtrim(ltrim(cast((:ids) as text),'('),')'),',') as int[]), cast(it.id as int))")
+    List<BigDecimal> findPricesByIdInOrdered(@Param("ids") List<Integer> ids);
 }
+

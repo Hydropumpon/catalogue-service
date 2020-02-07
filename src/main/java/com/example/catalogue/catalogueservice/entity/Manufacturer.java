@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
@@ -27,7 +28,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class Manufacturer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "manufacturer_id_gen", sequenceName = "manufacturer_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "manufacturer_id_gen")
     private Integer id;
 
     @NotNull

@@ -69,11 +69,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private void checkNameDuplicate(Category category) {
-
         categoryRepository.findByName(category.getName())
                           .map(Category::getId)
-                          .filter(id -> id.equals(category.getId()))
-                          .orElseThrow(() -> new ConflictException(ErrorMessage.CATEGORY_EXIST,
-                                                                   ServiceErrorCode.ALREADY_EXIST));
+                          .filter(id -> !id.equals(category.getId()))
+                          .ifPresent(integer -> {
+                              throw new ConflictException(ErrorMessage.CATEGORY_EXIST,
+                                                          ServiceErrorCode.ALREADY_EXIST);
+                          });
     }
 }

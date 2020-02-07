@@ -1,5 +1,6 @@
 package com.example.catalogue.catalogueservice.listener;
 
+import com.example.catalogue.catalogueservice.client.OrderClient;
 import com.example.catalogue.catalogueservice.messages.OrderMessage;
 import com.example.catalogue.catalogueservice.service.OrderCalcService;
 import com.rabbitmq.client.Channel;
@@ -17,17 +18,25 @@ public class OrderListener {
 
     private OrderCalcService orderCalcService;
 
+    private OrderClient orderClient;
+
     @Autowired
-    public OrderListener(OrderCalcService orderCalcService) {
+    public OrderListener(OrderCalcService orderCalcService,
+                         OrderClient orderClient) {
         this.orderCalcService = orderCalcService;
+        this.orderClient = orderClient;
     }
 
     @RabbitListener(queues = "${rabbitmq.queues.order}")
     public void onOrderMessageReceive(OrderMessage orderMessage, Channel channel, @Header(
-            AmqpHeaders.DELIVERY_TAG) long tag) throws Exception {
-        log.debug(orderMessage.toString());
-        orderMessage = orderCalcService.calcOrder(orderMessage);
-        log.debug(orderMessage.toString());
-        channel.basicAck(tag, false);
+            AmqpHeaders.DELIVERY_TAG) long tag) {
+        try {
+            log.debug(orderMessage.toString());
+            orderMessage = orderCalcService.calcOrder(orderMessage);
+            orderClient.updateOrder(orderMessage);
+            channel.basicAck(tag, false);
+        } catch (Exception ex) {
+            log.debug(ex.getMessage());
+        }
     }
 }

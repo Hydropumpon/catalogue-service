@@ -1,6 +1,7 @@
 package com.example.catalogue.catalogueservice.messages;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +11,17 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderLine {
 
     private Integer itemId;
 
     private Integer quantity;
+
+    public OrderLine(@JsonProperty Integer itemId, @JsonProperty Integer quantity) {
+        this.itemId = itemId;
+        this.quantity = quantity;
+    }
 }

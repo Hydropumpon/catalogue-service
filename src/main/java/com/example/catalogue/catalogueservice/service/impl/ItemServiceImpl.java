@@ -111,6 +111,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public List<BigDecimal> findByIdInOrdered(List<Integer> ids) {
-        return itemRepository.findByIdInOrdered(ids);
+        return itemRepository.findPricesByIdInOrdered(ids);
     }
 }

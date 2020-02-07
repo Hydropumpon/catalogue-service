@@ -7,6 +7,7 @@ import com.example.catalogue.catalogueservice.service.ItemService;
 import com.example.catalogue.catalogueservice.service.OrderCalcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ public class OrderCalcServiceImpl implements OrderCalcService {
     }
 
     @Override
+    @Transactional
     public OrderMessage calcOrder(OrderMessage orderMessage) {
 
         List<Integer> itemIds = orderMessage.getOrderLineList()
@@ -36,6 +38,7 @@ public class OrderCalcServiceImpl implements OrderCalcService {
         orderMessage.setApproveDate(LocalDate.now());
 
         if (prices.size() != itemIds.size()) {
+            orderMessage.setAmount(BigDecimal.ZERO);
             orderMessage.setState(OrderStates.REJECTED);
             return orderMessage;
         }
