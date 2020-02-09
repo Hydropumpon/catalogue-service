@@ -49,12 +49,13 @@ public class OrderCalcServiceImpl implements OrderCalcService {
         orderMessage.setAmount(amount);
         return orderMessage;
 
+
+//        todo подумать как реализовать запрос
 //        Function<OrderLine, BigDecimal> totalMapper =
 //                orderLine -> itemService.getItemById(orderLine.getItemId())
 //                                        .getPrice()
 //                                        .multiply(BigDecimal.valueOf(
 //                                                orderLine.getQuantity()));
-//        todo подумать как реализовать запрос
 //        orderMessage.setApproveDate(LocalDate.now());
 //        try {
 //            orderMessage.setAmount(
