@@ -14,4 +14,5 @@ public class CatalogueServiceApplication {
         SpringApplication.run(CatalogueServiceApplication.class, args);
     }
 
+
 }
