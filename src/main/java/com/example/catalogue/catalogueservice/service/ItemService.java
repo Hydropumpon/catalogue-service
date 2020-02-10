@@ -1,6 +1,7 @@
 package com.example.catalogue.catalogueservice.service;
 
 import com.example.catalogue.catalogueservice.entity.Item;
+import com.example.catalogue.catalogueservice.entity.Manufacturer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,4 +25,6 @@ public interface ItemService {
     List<Item> getByCategoryAndManufacturer(String categoryName, String manufacturerName);
 
     List<BigDecimal> findByIdInOrdered(List<Integer> ids);
+
+    void deleteItemsByManufacturer(Manufacturer manufacturer);
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,7 @@ public class Category {
     @Id
     @SequenceGenerator(name = "category_id_gen", sequenceName = "category_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "category_id_gen")
+    @Column(name = "id")
     private Integer id;
 
     @NotNull

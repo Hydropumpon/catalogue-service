@@ -58,7 +58,7 @@ public class ManufacturerController {
     }
 
     @DeleteMapping("/{id}")
-    public void updateManufacturer(@PathVariable(name = "id") Integer id) {
+    public void deleteManufacturer(@PathVariable(name = "id") Integer id) {
         manufacturerService.deleteManufacturer(id);
     }
 

@@ -5,22 +5,30 @@ import com.example.catalogue.catalogueservice.exception.ErrorMessage;
 import com.example.catalogue.catalogueservice.exception.NotFoundException;
 import com.example.catalogue.catalogueservice.exception.ServiceErrorCode;
 import com.example.catalogue.catalogueservice.repository.ManufacturerRepository;
+import com.example.catalogue.catalogueservice.service.ItemService;
 import com.example.catalogue.catalogueservice.service.ManufacturerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
 
     private ManufacturerRepository manufacturerRepository;
 
+    private ItemService itemService;
+
+    @Autowired
     public ManufacturerServiceImpl(
+            ItemService itemService,
             ManufacturerRepository manufacturerRepository) {
         this.manufacturerRepository = manufacturerRepository;
+        this.itemService = itemService;
     }
 
     @Override
@@ -50,7 +58,15 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     @Override
     @Transactional
     public void deleteManufacturer(Integer id) {
-        manufacturerRepository.findById(id).ifPresent((manufacturer -> manufacturerRepository.delete(manufacturer)));
+        manufacturerRepository.findById(id)
+                              .map(manufacturer ->
+                                   {
+                                       itemService.deleteItemsByManufacturer(manufacturer);
+                                       manufacturerRepository.delete(manufacturer);
+                                       return Optional.empty();
+                                   })
+                              .orElseThrow(() -> new NotFoundException(ErrorMessage.MANUFACTURER_NOT_FOUND,
+                                                                       ServiceErrorCode.NOT_FOUND));
     }
 
     @Override

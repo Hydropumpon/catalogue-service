@@ -16,7 +16,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     List<Category> findAllByIdIn(List<Integer> categoryIds);
 
-    @Query(nativeQuery = true, value = "select cat from category cat " +
+    @Query(nativeQuery = true, value = "select cat.* from category cat " +
             "join item_category ic on cat.id = ic.category_id " +
             "where ic.item_id = :itemId")
     List<Category> findCategoriesByItemId(@Param("itemId") Integer id);

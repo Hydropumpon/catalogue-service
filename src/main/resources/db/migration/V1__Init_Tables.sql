@@ -20,7 +20,7 @@ alter sequence item_category_id_seq owner to postgres;
 
 create table if not exists category
 (
-    id int4 not null
+    id integer not null
         constraint category_pkey
             primary key,
     name varchar(255) not null
@@ -30,7 +30,7 @@ alter table category owner to postgres;
 
 create table if not exists manufacturer
 (
-    id int4 not null
+    id integer not null
         constraint manufacturer_pkey
             primary key,
     building_number integer,
@@ -47,13 +47,13 @@ alter table manufacturer owner to postgres;
 
 create table if not exists item
 (
-    id int4 not null
+    id integer not null
         constraint item_pkey
             primary key,
     description varchar(255) not null,
     name varchar(255) not null,
     price numeric(19,2) not null ,
-    manufacturer_id int4 not null
+    manufacturer_id integer not null
         constraint fk_manufacturer_id
             references manufacturer
 );
@@ -62,13 +62,13 @@ alter table item owner to postgres;
 
 create table if not exists item_category
 (
-    id int4 not null
+    id integer not null
         constraint item_category_pkey
             primary key,
-    category_id int4
+    category_id integer
         constraint fk_category_id
             references category,
-    item_id int4
+    item_id integer
         constraint fk_item_id
             references item
 );

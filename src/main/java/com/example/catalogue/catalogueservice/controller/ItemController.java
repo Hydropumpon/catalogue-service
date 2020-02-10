@@ -71,8 +71,8 @@ public class ItemController {
     }
 
     @GetMapping("/byCategoryAndManufacturer")
-    public List<ItemDto> getByCategoryAndManufacturer(@RequestParam("category") String categoryName,
-                                                      @RequestParam("manufacturer") String manufacturerName) {
+    public List<ItemDto> getByCategoryAndManufacturer(@RequestParam(name = "category") String categoryName,
+                                                      @RequestParam(name = "manufacturer") String manufacturerName) {
         return itemConverterDto.toDto(itemService.getByCategoryAndManufacturer(categoryName, manufacturerName));
     }
 

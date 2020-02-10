@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -62,10 +64,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void deleteCategory(Integer id) {
-        Category category = categoryRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
-        itemCategoryRepository.deleteAllByCategoryId(category.getId());
-        categoryRepository.delete(category);
+        categoryRepository.findById(id).map(category -> {
+            itemCategoryRepository.deleteAllByCategoryId(category.getId());
+            categoryRepository.delete(category);
+            return Optional.empty();
+        }).orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
     }
 
     private void checkNameDuplicate(Category category) {

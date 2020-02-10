@@ -33,7 +33,6 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile "p6spy:p6spy:3.8.6"
     implementation 'io.opentracing.contrib:opentracing-spring-jaeger-web-starter:2.0.3'
     compile group: 'io.jaegertracing', name: 'jaeger-client', version: "1.1.0"
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

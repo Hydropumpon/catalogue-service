@@ -30,6 +30,7 @@ public class Manufacturer {
     @Id
     @SequenceGenerator(name = "manufacturer_id_gen", sequenceName = "manufacturer_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "manufacturer_id_gen")
+    @Column(name = "id")
     private Integer id;
 
     @NotNull

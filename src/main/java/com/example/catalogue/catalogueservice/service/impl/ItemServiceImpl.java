@@ -2,6 +2,7 @@ package com.example.catalogue.catalogueservice.service.impl;
 
 import com.example.catalogue.catalogueservice.entity.Category;
 import com.example.catalogue.catalogueservice.entity.Item;
+import com.example.catalogue.catalogueservice.entity.Manufacturer;
 import com.example.catalogue.catalogueservice.entity.jointable.ItemCategory;
 import com.example.catalogue.catalogueservice.exception.ErrorMessage;
 import com.example.catalogue.catalogueservice.exception.NotFoundException;
@@ -112,5 +113,14 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     public List<BigDecimal> findByIdInOrdered(List<Integer> ids) {
         return itemRepository.findPricesByIdInOrdered(ids);
+    }
+
+    @Override
+    @Transactional
+    public void deleteItemsByManufacturer(Manufacturer manufacturer) {
+
+        List<Item> items = itemRepository.findAllByManufacturer(manufacturer);
+        items.forEach(item -> itemCategoryRepository.deleteAllByItem(item));
+        itemRepository.deleteAll(items);
     }
 }
