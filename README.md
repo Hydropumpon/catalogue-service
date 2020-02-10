@@ -6,7 +6,7 @@ ____
 - *operations with items*
 - *communication with order service for approving/rejecting order with total price calculation*
 ## Used technologies
-**Spring, Gradle, Hibernate, Postgresql, Flywaydb, Swagger, Docker, Feign, RabbitMQ, Lombok, Eureka**
+**Spring, Gradle, Hibernate, Postgresql, Flywaydb, Swagger, Docker, Feign, RabbitMQ, Lombok, Eureka, Jaeger**
 ## How to start application
 - Install RabbitMQ
 - Eureka Discovery Server should be started
