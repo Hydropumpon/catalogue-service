@@ -1,6 +1,7 @@
 package com.example.catalogue.catalogueservice.dto;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import java.beans.ConstructorProperties;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 public class CategoryDto {
 
     private final Integer id;

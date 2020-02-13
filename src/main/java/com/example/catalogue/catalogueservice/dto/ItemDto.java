@@ -1,6 +1,7 @@
 package com.example.catalogue.catalogueservice.dto;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 public class ItemDto {
 
     private final Integer id;

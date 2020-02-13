@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode
 @AllArgsConstructor
 public class Manufacturer {
     @Id

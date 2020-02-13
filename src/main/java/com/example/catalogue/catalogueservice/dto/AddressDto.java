@@ -2,7 +2,9 @@ package com.example.catalogue.catalogueservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -10,6 +12,8 @@ import java.beans.ConstructorProperties;
 
 @Getter
 @Builder
+@EqualsAndHashCode
+@ToString
 public class AddressDto {
 
     @NotBlank

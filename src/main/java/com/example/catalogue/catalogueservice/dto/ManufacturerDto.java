@@ -11,7 +11,7 @@ import java.beans.ConstructorProperties;
 
 @Getter
 @Builder
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode
 public class ManufacturerDto {
 
     private final Integer id;
