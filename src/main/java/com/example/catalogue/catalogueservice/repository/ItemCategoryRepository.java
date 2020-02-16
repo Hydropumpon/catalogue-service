@@ -13,8 +13,6 @@ public interface ItemCategoryRepository extends JpaRepository<ItemCategory, Inte
 
     void deleteAllByCategoryId(Integer id);
 
-    void deleteAllByCategoryIdInAndItem(List<Integer> categoryIds, Item item);
-
     void deleteAllByCategoryInAndItem(List<Category> categories, Item item);
 
     void deleteAllByItem(Item item);

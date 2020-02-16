@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemService {
 
@@ -24,7 +25,7 @@ public interface ItemService {
 
     List<Item> getByCategoryAndManufacturer(String categoryName, String manufacturerName);
 
-    List<BigDecimal> findByIdInOrdered(List<Integer> ids);
-
     void deleteItemsByManufacturer(Manufacturer manufacturer);
+
+    Optional<Item> getItemsByIdAndQuantity(Integer itemId, Integer quantity);
 }

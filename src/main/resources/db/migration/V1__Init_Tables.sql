@@ -52,6 +52,7 @@ create table if not exists item
             primary key,
     description varchar(255) not null,
     name varchar(255) not null,
+    quantity integer not null,
     price numeric(19,2) not null ,
     manufacturer_id integer not null
         constraint fk_manufacturer_id
@@ -74,3 +75,11 @@ create table if not exists item_category
 );
 
 alter table item_category owner to postgres;
+
+alter sequence item_id_seq owned by item.id;
+
+alter sequence item_category_id_seq owned by item_category.id;
+
+alter sequence manufacturer_id_seq owned by manufacturer.id;
+
+alter sequence category_id_seq owned by category.id;

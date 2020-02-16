@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer> {
@@ -20,7 +21,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     List<Item> getItemsByPriceLessAndManufacturer(@Param("price") BigDecimal price,
                                                   @Param("manufacturerName") String manufacture);
 
-    @Query( nativeQuery = true,
+    @Query(nativeQuery = true,
             value = "select it.* from item it " +
                     "join item_category ic on it.id = ic.item_id " +
                     "join category c on ic.category_id = c.id " +
@@ -39,15 +40,10 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
                                                      @Param("manufacturerName") String manufacturerName);
 
 
-    @Query(nativeQuery = true,
-            value = "select it.price from item it " +
-                    "where it.id in :ids " +
-                    "order by array_position(cast(string_to_array(rtrim(ltrim(cast((:ids) as text),'('),')'),',') as int[]), cast(it.id as int))")
-    List<BigDecimal> findPricesByIdInOrdered(@Param("ids") List<Integer> ids);
-
-
-    List<Item> deleteAllByManufacturer(Manufacturer manufacturer);
-
     List<Item> findAllByManufacturer(Manufacturer manufacturer);
+
+    Optional<Item> findByIdAndQuantityGreaterThanEqual(Integer itemId, Integer quantity);
+
+
 }
 

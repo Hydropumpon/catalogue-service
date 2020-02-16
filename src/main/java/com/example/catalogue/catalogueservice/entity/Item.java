@@ -44,6 +44,9 @@ public class Item {
     @NotNull
     private String description;
 
+    @NotNull
+    private Integer quantity;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "manufacturer_id")

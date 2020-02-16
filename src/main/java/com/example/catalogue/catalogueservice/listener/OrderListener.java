@@ -10,6 +10,9 @@ import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 
 @Component
@@ -27,16 +30,15 @@ public class OrderListener {
         this.orderClient = orderClient;
     }
 
+
     @RabbitListener(queues = "${rabbitmq.queues.order}")
+    @Transactional
     public void onOrderMessageReceive(OrderMessage orderMessage, Channel channel, @Header(
-            AmqpHeaders.DELIVERY_TAG) long tag) {
-        try {
-            log.debug(orderMessage.toString());
-            orderMessage = orderCalcService.calcOrder(orderMessage);
-            orderClient.updateOrder(orderMessage);
-            channel.basicAck(tag, false);
-        } catch (Exception ex) {
-            log.debug(ex.getMessage());
-        }
+            AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+        log.debug(orderMessage.toString());
+        orderMessage = orderCalcService.calcOrder(orderMessage);
+        log.debug(orderMessage.toString());
+        orderClient.updateOrder(orderMessage);
+
     }
 }

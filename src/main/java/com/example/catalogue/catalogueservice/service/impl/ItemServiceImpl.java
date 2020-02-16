@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -110,17 +111,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<BigDecimal> findByIdInOrdered(List<Integer> ids) {
-        return itemRepository.findPricesByIdInOrdered(ids);
-    }
-
-    @Override
     @Transactional
     public void deleteItemsByManufacturer(Manufacturer manufacturer) {
-
         List<Item> items = itemRepository.findAllByManufacturer(manufacturer);
         items.forEach(item -> itemCategoryRepository.deleteAllByItem(item));
         itemRepository.deleteAll(items);
+    }
+
+    @Override
+    public Optional<Item> getItemsByIdAndQuantity(Integer itemId, Integer quantity) {
+        return itemRepository.findByIdAndQuantityGreaterThanEqual(itemId, quantity);
     }
 }

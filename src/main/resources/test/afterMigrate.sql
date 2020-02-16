@@ -34,17 +34,17 @@ values (nextval('category_id_seq'), 'home');
 insert into category(id, name)
 values (nextval('category_id_seq'), 'phone');
 
-insert into item(id, description, name, price, manufacturer_id)
-values (nextval('item_id_seq'), 'good tool', 'screwdriver', 50.00, 1);
+insert into item(id, description, name, price, manufacturer_id,quantity)
+values (nextval('item_id_seq'), 'good tool', 'screwdriver', 50.00, 1,100);
 
-insert into item(id, description, name, price, manufacturer_id)
-values (nextval('item_id_seq'), 'norm tool', 'phone', 40.00, 2);
+insert into item(id, description, name, price, manufacturer_id,quantity)
+values (nextval('item_id_seq'), 'norm tool', 'phone', 40.00, 2,200);
 
-insert into item(id, description, name, price, manufacturer_id)
-values (nextval('item_id_seq'), 'bad tool', 'chair', 30.00, 1);
+insert into item(id, description, name, price, manufacturer_id,quantity)
+values (nextval('item_id_seq'), 'bad tool', 'chair', 30.00, 1,100);
 
-insert into item(id, description, name, price, manufacturer_id)
-values (nextval('item_id_seq'), 'good tool', 'fitting', 20.00, 3);
+insert into item(id, description, name, price, manufacturer_id,quantity)
+values (nextval('item_id_seq'), 'good tool', 'fitting', 20.00, 3,100);
 
 insert into item_category(id, category_id, item_id)
 values (nextval('item_category_id_seq'), 1, 1);
