@@ -23,10 +23,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static junit.framework.Assert.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ManufacturerControllerTest {
 
-    private final static String URI = "/manufacturer";
+    private final static String URI = "/catalogue/manufacturer";
 
     @Autowired
     private MockMvc mockMvc;
@@ -99,7 +99,7 @@ public class ManufacturerControllerTest {
     }
 
     @Test
-    public void updateManufacturer() throws Exception{
+    public void updateManufacturer() throws Exception {
         Mockito.when(manufacturerServiceMock.updateManufacturer(Mockito.any(Manufacturer.class)))
                .thenReturn(ManufacturerTestUtils.manufacturerServiceAnswer);
 
@@ -141,12 +141,13 @@ public class ManufacturerControllerTest {
         Mockito.when(manufacturerServiceMock.getManufacturerById(Mockito.anyInt()))
                .thenReturn(ManufacturerTestUtils.manufacturerServiceAnswer);
 
-        MvcResult mvcResult = mockMvc.perform(get(URI + "/{id}", ManufacturerTestUtils.manufacturerServiceAnswer.getId())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(TestUtil.asJsonString(ManufacturerTestUtils.manufacturerToAdd)))
-               .andDo(print())
-               .andExpect(status().isOk())
-               .andReturn();
+        MvcResult mvcResult =
+                mockMvc.perform(get(URI + "/{id}", ManufacturerTestUtils.manufacturerServiceAnswer.getId())
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content(TestUtil.asJsonString(ManufacturerTestUtils.manufacturerToAdd)))
+                       .andDo(print())
+                       .andExpect(status().isOk())
+                       .andReturn();
 
         ManufacturerDto answer = TestUtil.asObject(mvcResult.getResponse().getContentAsString(), ManufacturerDto.class);
 
