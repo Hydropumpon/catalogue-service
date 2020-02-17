@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/item")
+@RequestMapping("catalogue/item")
 public class ItemController {
 
     private ItemService itemService;

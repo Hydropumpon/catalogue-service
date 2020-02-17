@@ -17,8 +17,4 @@ public class OrderCalcServiceImplTest {
     @InjectMocks
     private OrderCalcService orderCalcService;
 
-    @Test
-    public void calcOrder() {
-
-    }
 }

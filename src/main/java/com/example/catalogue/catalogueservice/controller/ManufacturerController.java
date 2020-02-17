@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/manufacturer")
+@RequestMapping("catalogue/manufacturer")
 public class ManufacturerController {
 
     private ConverterDto<Manufacturer, ManufacturerDto> manufacturerConverterDto;

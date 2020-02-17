@@ -38,7 +38,7 @@ public class OrderListener {
         log.debug(orderMessage.toString());
         orderMessage = orderCalcService.calcOrder(orderMessage);
         log.debug(orderMessage.toString());
-        orderClient.updateOrder(orderMessage);
+        orderClient.updateOrder(orderMessage, orderMessage.getId());
 
     }
 }
