@@ -11,9 +11,11 @@ import java.util.List;
 @Repository
 public interface ItemCategoryRepository extends JpaRepository<ItemCategory, Integer> {
 
-    void deleteAllByCategoryId(Integer id);
+    void deleteAllByCategory(Category category);
 
     void deleteAllByCategoryInAndItem(List<Category> categories, Item item);
 
     void deleteAllByItem(Item item);
+
+    List<ItemCategory> findAllByItem(Item item);
 }

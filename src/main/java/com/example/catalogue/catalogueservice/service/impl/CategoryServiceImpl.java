@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,20 +61,26 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(Category category, Integer id) {
         return categoryRepository.findById(id)
                                  .map(categoryDb -> {
-                                     category.setName(category.getName());
+                                     categoryDb.setName(category.getName());
                                      return categoryRepository.save(categoryDb);
                                  })
-                                 .orElseThrow(() -> new ConflictException(ErrorMessage.CATEGORY_EXIST,
-                                                                          ServiceErrorCode.ALREADY_EXIST));
+                                 .orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND,
+                                                                          ServiceErrorCode.NOT_FOUND));
     }
 
     @Override
     @Transactional
     public void deleteCategory(Integer id) {
         categoryRepository.findById(id).map(category -> {
-            itemCategoryRepository.deleteAllByCategoryId(category.getId());
+            itemCategoryRepository.deleteAllByCategory(category);
             categoryRepository.delete(category);
             return Optional.empty();
         }).orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Category> getCategoriesByIdIn(List<Integer> categoryIds) {
+        return categoryRepository.findAllByIdIn(categoryIds);
     }
 }

@@ -12,9 +12,9 @@ public interface ItemService {
 
     Page<Item> getItems(Pageable pageable);
 
-    Item addItem(Item item, List<Integer> categoryIds);
+    Item addItem(Item item);
 
-    Item updateItem(Item item, List<Integer> categoryIds, Integer id);
+    Item updateItem(Item item, Integer id);
 
     Item getItemById(Integer id);
 

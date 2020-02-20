@@ -1,9 +1,7 @@
 package com.example.catalogue.catalogueservice.service.impl;
 
-import com.example.catalogue.catalogueservice.entity.Category;
 import com.example.catalogue.catalogueservice.entity.Item;
 import com.example.catalogue.catalogueservice.entity.Manufacturer;
-import com.example.catalogue.catalogueservice.entity.jointable.ItemCategory;
 import com.example.catalogue.catalogueservice.exception.ErrorMessage;
 import com.example.catalogue.catalogueservice.exception.NotFoundException;
 import com.example.catalogue.catalogueservice.exception.ServiceErrorCode;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,51 +44,23 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item addItem(Item item, List<Integer> categoryIds) {
-        Item itemSaved = itemRepository.save(item);
-        List<Category> categories = categoryRepository.findAllByIdIn(categoryIds);
-        if (categories.size() != categoryIds.size()) {
-            throw new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND);
-        }
-        List<ItemCategory> itemCategories = new ArrayList<>(categories.size());
-        categories.forEach((category -> itemCategories.add(new ItemCategory(item, category))));
-        itemCategoryRepository.saveAll(itemCategories);
-        return itemSaved;
+    public Item addItem(Item item) {
+        return itemRepository.save(item);
     }
 
     @Override
     @Transactional
-    public Item updateItem(Item item, List<Integer> categoryIds, Integer id) {
-
-        Item itemSaved = itemRepository.findById(id).map(itemDb ->
-                                                         {
-                                                             itemDb.setQuantity(item.getQuantity());
-                                                             itemDb.setDescription(item.getDescription());
-                                                             itemDb.setManufacturer(item.getManufacturer());
-                                                             itemDb.setName(item.getName());
-                                                             itemDb.setPrice(item.getPrice());
-                                                             return itemRepository.save(itemDb);
-                                                         }).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
-
-        List<Category> categories = categoryRepository.findAllByIdIn(categoryIds);
-        if (categories.size() != categoryIds.size()) {
-            throw new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND);
-        }
-
-        List<Category> currentCategories = categoryRepository.findCategoriesByItemId(itemSaved.getId());
-        List<Category> categoriesToDelete = new ArrayList<>(currentCategories);
-        categoriesToDelete.removeAll(categories);
-
-        itemCategoryRepository.deleteAllByCategoryInAndItem(categoriesToDelete, itemSaved);
-
-        List<Category> categoriesToInsert = new ArrayList<>(categories);
-        categoriesToInsert.removeAll(currentCategories);
-
-        List<ItemCategory> itemCategories = new ArrayList<>(categoriesToInsert.size());
-        categoriesToInsert.forEach((category -> itemCategories.add(new ItemCategory(item, category))));
-        itemCategoryRepository.saveAll(itemCategories);
-        return itemSaved;
+    public Item updateItem(Item item, Integer id) {
+        return itemRepository.findById(id)
+                             .map(itemDb -> {
+                                 itemDb.setPrice(item.getPrice());
+                                 itemDb.setQuantity(item.getQuantity());
+                                 itemDb.setPrice(item.getPrice());
+                                 itemDb.setDescription(item.getDescription());
+                                 itemDb.setManufacturer(item.getManufacturer());
+                                 return itemRepository.save(itemDb);
+                             }).orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
     }
 
     @Override
@@ -99,7 +68,6 @@ public class ItemServiceImpl implements ItemService {
     public Item getItemById(Integer id) {
         return itemRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
-
     }
 
     @Override
@@ -131,8 +99,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void deleteItem(Integer id) {
-        Item item = itemRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
+        Item item = this.getItemById(id);
         itemCategoryRepository.deleteAllByItem(item);
         itemRepository.delete(item);
     }

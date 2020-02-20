@@ -7,19 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer> {
-
-    @Query(nativeQuery = true,
-            value = "select it.* from item it " +
-                    "join manufacturer m on it.manufacturer_id = m.id " +
-                    "where it.price < :price and m.name = :manufacturerName")
-    List<Item> getItemsByPriceLessAndManufacturer(@Param("price") BigDecimal price,
-                                                  @Param("manufacturerName") String manufacture);
 
     @Query(nativeQuery = true,
             value = "select it.* from item it " +
@@ -45,5 +37,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     Optional<Item> findByIdAndQuantityGreaterThanEqual(Integer itemId, Integer quantity);
 
 
+    Optional<Item> findByName(String name);
 }
 

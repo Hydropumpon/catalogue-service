@@ -1,9 +1,12 @@
 package com.example.catalogue.catalogueservice.controller;
 
 import com.example.catalogue.catalogueservice.converter.ConverterDto;
+import com.example.catalogue.catalogueservice.dto.CategoryDto;
+import com.example.catalogue.catalogueservice.dto.CategoryIds;
 import com.example.catalogue.catalogueservice.dto.ItemDto;
-import com.example.catalogue.catalogueservice.dto.wrapper.ItemDtoWrapper;
+import com.example.catalogue.catalogueservice.entity.Category;
 import com.example.catalogue.catalogueservice.entity.Item;
+import com.example.catalogue.catalogueservice.service.ItemCategoryService;
 import com.example.catalogue.catalogueservice.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +31,19 @@ public class ItemController {
 
     private ConverterDto<Item, ItemDto> itemConverterDto;
 
+    private ConverterDto<Category, CategoryDto> categoryConverterDto;
+
+    private ItemCategoryService itemCategoryService;
+
     @Autowired
     public ItemController(ItemService itemService,
-                          ConverterDto<Item, ItemDto> itemConverterDto) {
+                          ConverterDto<Item, ItemDto> itemConverterDto,
+                          ConverterDto<Category, CategoryDto> categoryConverterDto,
+                          ItemCategoryService itemCategoryService) {
         this.itemService = itemService;
         this.itemConverterDto = itemConverterDto;
+        this.categoryConverterDto = categoryConverterDto;
+        this.itemCategoryService = itemCategoryService;
     }
 
     @GetMapping
@@ -41,17 +52,15 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestBody @Valid ItemDtoWrapper dtoWrapper) {
-        ItemDto itemDto = dtoWrapper.getItemDto();
+    public ItemDto addItem(@RequestBody @Valid ItemDto itemDto) {
         Item item = itemConverterDto.toEntity(itemDto);
-        return itemConverterDto.toDto(itemService.addItem(item, dtoWrapper.getCategoryIds()));
+        return itemConverterDto.toDto(itemService.addItem(item));
     }
 
     @PutMapping("/{id}")
-    public ItemDto updateItem(@RequestBody @Valid ItemDtoWrapper dtoWrapper, @PathVariable("id") Integer id) {
-        ItemDto itemDto = dtoWrapper.getItemDto();
+    public ItemDto updateItem(@RequestBody @Valid ItemDto itemDto, @PathVariable("id") Integer id) {
         Item item = itemConverterDto.toEntity(itemDto);
-        return itemConverterDto.toDto(itemService.updateItem(item, dtoWrapper.getCategoryIds(), id));
+        return itemConverterDto.toDto(itemService.updateItem(item, id));
     }
 
     @GetMapping("/{id}")
@@ -73,6 +82,24 @@ public class ItemController {
     public List<ItemDto> getByCategoryAndManufacturer(@RequestParam(name = "category") String categoryName,
                                                       @RequestParam(name = "manufacturer") String manufacturerName) {
         return itemConverterDto.toDto(itemService.getByCategoryAndManufacturer(categoryName, manufacturerName));
+    }
+
+    @PostMapping("/{id}/category")
+    public List<CategoryDto> addCategories(@PathVariable("id") Integer itemId,
+                                           @Valid @RequestBody CategoryIds categories) {
+
+        return categoryConverterDto.toDto(itemCategoryService.addCategories(itemId, categories.getCategoryIds()));
+    }
+
+    @GetMapping("/{id}/category")
+    public List<CategoryDto> getItemCategories(@PathVariable("id") Integer itemId) {
+
+        return categoryConverterDto.toDto(itemCategoryService.getItemCategories(itemId));
+    }
+
+    @DeleteMapping("/{id}/category")
+    public void deleteCategories(@PathVariable("id") Integer itemId) {
+         itemCategoryService.deleteCategories(itemId);
     }
 
 }

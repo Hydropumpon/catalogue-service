@@ -18,6 +18,10 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ErrorControllerAdvice extends ResponseEntityExceptionHandler {
 
+    private static final String UNIQUE_CONSTRAINT_VIOLATION_CODE = "23505";
+    private static final String CATEGORY_NAME_UNIQUE_CONSTRAINT = "category_name_key";
+    private static final String MANUFACTURER_NAME_UNIQUE_CONSTRAINT = "manufacturer_name_key";
+
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ErrorResponse> serviceExceptionHandler(ServiceException exception) {
         ErrorResponse errorResponse =
@@ -31,12 +35,12 @@ public class ErrorControllerAdvice extends ResponseEntityExceptionHandler {
         SQLException sqlException = (SQLException) rootCause;
         String message = rootCause.getMessage();
 
-        if (sqlException.getSQLState().equals("23505")) {
+        if (sqlException.getSQLState().equals(UNIQUE_CONSTRAINT_VIOLATION_CODE)) {
             if (message != null) {
-                if (message.contains("category_name_key")) {
+                if (message.contains(CATEGORY_NAME_UNIQUE_CONSTRAINT)) {
                     return serviceExceptionHandler(
                             new ConflictException(ErrorMessage.CATEGORY_EXIST, ServiceErrorCode.ALREADY_EXIST));
-                } else if (message.contains("manufacturer_name_key")) {
+                } else if (message.contains(MANUFACTURER_NAME_UNIQUE_CONSTRAINT)) {
                     return serviceExceptionHandler(
                             new ConflictException(ErrorMessage.MANUFACTURER_EXIST, ServiceErrorCode.ALREADY_EXIST));
                 }
