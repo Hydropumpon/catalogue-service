@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -113,10 +114,10 @@ public class CategoryControllerTest {
 
     @Test
     public void updateCategory() throws Exception {
-        Mockito.when(categoryServiceMock.updateCategory(Mockito.any(Category.class)))
+        Mockito.when(categoryServiceMock.updateCategory(Mockito.any(Category.class), Mockito.anyInt()))
                .thenReturn(CategoryTestUtils.categoryServiceAnswer);
 
-        MvcResult mvcResult = mockMvc.perform(put(URI)
+        MvcResult mvcResult = mockMvc.perform(put(URI+"/{id}", CategoryTestUtils.categoryDtoToUpdate.getId())
                                                       .content(TestUtil.asJsonString(
                                                               CategoryTestUtils.categoryDtoToUpdate))
                                                       .contentType(MediaType.APPLICATION_JSON))
@@ -127,7 +128,7 @@ public class CategoryControllerTest {
                                      .andReturn();
 
         ArgumentCaptor<Category> argumentCaptor = ArgumentCaptor.forClass(Category.class);
-        verify(categoryServiceMock, times(1)).updateCategory(argumentCaptor.capture());
+        verify(categoryServiceMock, times(1)).updateCategory(argumentCaptor.capture(), anyInt());
 
         Category argument = argumentCaptor.getValue();
         assertThat(argument.getId(), is(CategoryTestUtils.categoryDtoToUpdate.getId()));

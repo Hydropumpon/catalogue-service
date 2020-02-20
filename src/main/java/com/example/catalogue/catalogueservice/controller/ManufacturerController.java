@@ -51,10 +51,11 @@ public class ManufacturerController {
         return manufacturerConverterDto.toDto(manufacturerService.getManufacturersByIdIn(ids));
     }
 
-    @PutMapping
-    public ManufacturerDto updateManufacturer(@RequestBody ManufacturerDto manufacturerDto) {
+    @PutMapping("/{id}")
+    public ManufacturerDto updateManufacturer(@RequestBody @Valid ManufacturerDto manufacturerDto,
+                                              @PathVariable("id") Integer id) {
         Manufacturer manufacturer = manufacturerConverterDto.toEntity(manufacturerDto);
-        return manufacturerConverterDto.toDto(manufacturerService.updateManufacturer(manufacturer));
+        return manufacturerConverterDto.toDto(manufacturerService.updateManufacturer(manufacturer, id));
     }
 
     @DeleteMapping("/{id}")

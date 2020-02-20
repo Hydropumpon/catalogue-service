@@ -15,7 +15,7 @@ public interface ManufacturerService {
 
     List<Manufacturer> getManufacturersByIdIn(List<Integer> ids);
 
-    Manufacturer updateManufacturer(Manufacturer manufacturer);
+    Manufacturer updateManufacturer(Manufacturer manufacturer, Integer id);
 
     void deleteManufacturer(Integer id);
 

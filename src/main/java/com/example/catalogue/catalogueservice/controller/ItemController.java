@@ -7,6 +7,7 @@ import com.example.catalogue.catalogueservice.entity.Item;
 import com.example.catalogue.catalogueservice.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -47,11 +47,11 @@ public class ItemController {
         return itemConverterDto.toDto(itemService.addItem(item, dtoWrapper.getCategoryIds()));
     }
 
-    @PutMapping
-    public ItemDto updateItem(@RequestBody @Valid ItemDtoWrapper dtoWrapper) {
+    @PutMapping("/{id}")
+    public ItemDto updateItem(@RequestBody @Valid ItemDtoWrapper dtoWrapper, @PathVariable("id") Integer id) {
         ItemDto itemDto = dtoWrapper.getItemDto();
         Item item = itemConverterDto.toEntity(itemDto);
-        return itemConverterDto.toDto(itemService.updateItem(item, dtoWrapper.getCategoryIds()));
+        return itemConverterDto.toDto(itemService.updateItem(item, dtoWrapper.getCategoryIds(), id));
     }
 
     @GetMapping("/{id}")
@@ -59,10 +59,9 @@ public class ItemController {
         return itemConverterDto.toDto(itemService.getItemById(id));
     }
 
-    @GetMapping("/filter/")
-    public List<ItemDto> getByPriceLessAndManufacturer(@RequestParam("price") BigDecimal price,
-                                                       @RequestParam("manufacturer") String manufacturer) {
-        return itemConverterDto.toDto(itemService.getItemsByPriceLessAndManufacturer(price, manufacturer));
+    @DeleteMapping("/{id}")
+    public void deleteItem(@PathVariable("id") Integer id) {
+        itemService.deleteItem(id);
     }
 
     @GetMapping("/byCategory")

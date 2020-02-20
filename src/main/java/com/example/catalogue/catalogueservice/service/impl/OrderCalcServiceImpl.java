@@ -30,7 +30,6 @@ public class OrderCalcServiceImpl implements OrderCalcService {
     public OrderMessage calcOrder(OrderMessage orderMessage) {
 
         orderMessage.setApproveDate(LocalDate.now());
-
         Map<Integer, Item> itemPrices = orderMessage.getOrderLineList()
                                                     .stream()
                                                     .map(orderLine -> itemService
@@ -57,7 +56,6 @@ public class OrderCalcServiceImpl implements OrderCalcService {
                                                                                     .getPrice());
                                            })
                                            .reduce(BigDecimal.ZERO, BigDecimal::add));
-
         orderMessage.setState(OrderStates.APPROVED);
         return orderMessage;
     }

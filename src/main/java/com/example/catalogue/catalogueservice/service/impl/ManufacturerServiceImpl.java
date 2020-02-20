@@ -51,8 +51,16 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 
     @Override
     @Transactional
-    public Manufacturer updateManufacturer(Manufacturer manufacturer) {
-        return manufacturerRepository.save(manufacturer);
+    public Manufacturer updateManufacturer(Manufacturer manufacturer, Integer id) {
+        return manufacturerRepository.findById(id)
+                                     .map(manufacturerDb -> {
+                                         manufacturerDb.setAddress(manufacturer.getAddress());
+                                         manufacturerDb.setEmail(manufacturer.getEmail());
+                                         manufacturerDb.setFoundationYear(manufacturer.getFoundationYear());
+                                         manufacturerDb.setName(manufacturer.getName());
+                                         return manufacturerRepository.save(manufacturerDb);
+                                     }).orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.MANUFACTURER_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
     }
 
     @Override

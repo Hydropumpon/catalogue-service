@@ -23,7 +23,7 @@ create table if not exists category
     id integer not null
         constraint category_pkey
             primary key,
-    name varchar(255) not null
+    name varchar(255) not null unique
 );
 
 alter table category owner to postgres;
@@ -34,13 +34,13 @@ create table if not exists manufacturer
         constraint manufacturer_pkey
             primary key,
     building_number integer,
-    city varchar(255) not null ,
+    city varchar(255) not null,
     country varchar(255) not null,
     street varchar(255) not null,
     zip varchar(255) not null,
     email varchar(255) not null,
     foundation_year varchar(255) not null,
-    name varchar(255) not null
+    name varchar(255) not null unique
 );
 
 alter table manufacturer owner to postgres;

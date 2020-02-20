@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +61,19 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item updateItem(Item item, List<Integer> categoryIds) {
-        Item itemSaved = itemRepository.save(item);
+    public Item updateItem(Item item, List<Integer> categoryIds, Integer id) {
+
+        Item itemSaved = itemRepository.findById(id).map(itemDb ->
+                                                         {
+                                                             itemDb.setQuantity(item.getQuantity());
+                                                             itemDb.setDescription(item.getDescription());
+                                                             itemDb.setManufacturer(item.getManufacturer());
+                                                             itemDb.setName(item.getName());
+                                                             itemDb.setPrice(item.getPrice());
+                                                             return itemRepository.save(itemDb);
+                                                         }).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
+
         List<Category> categories = categoryRepository.findAllByIdIn(categoryIds);
         if (categories.size() != categoryIds.size()) {
             throw new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND);
@@ -94,12 +104,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Item> getItemsByPriceLessAndManufacturer(BigDecimal price, String manufacturer) {
-        return itemRepository.getItemsByPriceLessAndManufacturer(price, manufacturer);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<Item> getByCategory(String categoryName) {
         return itemRepository.findByCategoryName(categoryName);
     }
@@ -119,7 +123,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Item> getItemsByIdAndQuantity(Integer itemId, Integer quantity) {
         return itemRepository.findByIdAndQuantityGreaterThanEqual(itemId, quantity);
+    }
+
+    @Override
+    @Transactional
+    public void deleteItem(Integer id) {
+        Item item = itemRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
+        itemCategoryRepository.deleteAllByItem(item);
+        itemRepository.delete(item);
     }
 }

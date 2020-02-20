@@ -1,4 +1,4 @@
-package com.example.catalogue.catalogueservice.configuration;
+package com.example.catalogue.catalogueservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@EnableRabbit
 public class RMQConfig {
 
     @Value("${rabbitmq.dead_order.ttl}")
@@ -58,11 +56,16 @@ public class RMQConfig {
     @Autowired
     private RabbitAdmin rabbitAdmin;
 
+
     @PostConstruct
     protected void init() {
         rabbitTemplate.setMessageConverter(messageConverter);
         containerFactory.setMessageConverter(messageConverter);
         containerFactory.setMissingQueuesFatal(false);
+        declareOrderRequestQueue();
+    }
+
+    private void declareOrderRequestQueue() {
 
         Map<String, Object> args = new HashMap<>();
         args.put("x-dead-letter-exchange", orderExchange);
@@ -77,7 +80,7 @@ public class RMQConfig {
 
         args = new HashMap<>();
         args.put("x-dead-letter-exchange", deadOrderExchange);
-        args.put("x-dead-letter-routing-key", deadOrderRoutingKey);
+        args.put("x-dead-letter-routing-key",deadOrderRoutingKey);
 
         rabbitAdmin.declareQueue(new Queue(orderQueue, true, false, false, args));
         rabbitAdmin.declareExchange(new DirectExchange(orderExchange, true, false));

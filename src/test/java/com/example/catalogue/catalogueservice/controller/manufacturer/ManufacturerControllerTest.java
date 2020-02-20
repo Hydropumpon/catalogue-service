@@ -27,6 +27,7 @@ import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -100,10 +101,10 @@ public class ManufacturerControllerTest {
 
     @Test
     public void updateManufacturer() throws Exception {
-        Mockito.when(manufacturerServiceMock.updateManufacturer(Mockito.any(Manufacturer.class)))
+        Mockito.when(manufacturerServiceMock.updateManufacturer(Mockito.any(Manufacturer.class), Mockito.anyInt()))
                .thenReturn(ManufacturerTestUtils.manufacturerServiceAnswer);
 
-        MvcResult mvcResult = mockMvc.perform(put(URI)
+        MvcResult mvcResult = mockMvc.perform(put(URI + "/{id}", ManufacturerTestUtils.manufacturerDtoToUpdate.getId())
                                                       .contentType(MediaType.APPLICATION_JSON)
                                                       .content(TestUtil.asJsonString(
                                                               ManufacturerTestUtils.manufacturerDtoToUpdate)))
@@ -112,7 +113,7 @@ public class ManufacturerControllerTest {
                                      .andReturn();
 
         ArgumentCaptor<Manufacturer> argumentCaptor = ArgumentCaptor.forClass(Manufacturer.class);
-        verify(manufacturerServiceMock, times(1)).updateManufacturer(argumentCaptor.capture());
+        verify(manufacturerServiceMock, times(1)).updateManufacturer(argumentCaptor.capture(), anyInt());
 
         Manufacturer argument = argumentCaptor.getValue();
         assertThat(argument.getId(), is(ManufacturerTestUtils.manufacturerToUpdate.getId()));

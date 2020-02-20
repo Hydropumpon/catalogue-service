@@ -54,11 +54,17 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category);
     }
 
+
     @Override
     @Transactional
-    public Category updateCategory(Category category) {
-        checkNameDuplicate(category);
-        return categoryRepository.save(category);
+    public Category updateCategory(Category category, Integer id) {
+        return categoryRepository.findById(id)
+                                 .map(categoryDb -> {
+                                     category.setName(category.getName());
+                                     return categoryRepository.save(categoryDb);
+                                 })
+                                 .orElseThrow(() -> new ConflictException(ErrorMessage.CATEGORY_EXIST,
+                                                                          ServiceErrorCode.ALREADY_EXIST));
     }
 
     @Override
@@ -69,15 +75,5 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.delete(category);
             return Optional.empty();
         }).orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
-    }
-
-    private void checkNameDuplicate(Category category) {
-        categoryRepository.findByName(category.getName())
-                          .map(Category::getId)
-                          .filter(id -> !id.equals(category.getId()))
-                          .ifPresent(integer -> {
-                              throw new ConflictException(ErrorMessage.CATEGORY_EXIST,
-                                                          ServiceErrorCode.ALREADY_EXIST);
-                          });
     }
 }

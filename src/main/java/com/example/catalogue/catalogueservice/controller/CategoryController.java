@@ -49,10 +49,10 @@ public class CategoryController {
         return categoryConverterDto.toDto(categoryService.addCategory(category));
     }
 
-    @PutMapping
-    public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
+    @PutMapping("/{id}")
+    public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto, @PathVariable("id") Integer id) {
         Category category = categoryConverterDto.toEntity(categoryDto);
-        return categoryConverterDto.toDto(categoryService.updateCategory(category));
+        return categoryConverterDto.toDto(categoryService.updateCategory(category, id));
     }
 
     @DeleteMapping("/{id}")

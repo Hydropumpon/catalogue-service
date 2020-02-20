@@ -1,4 +1,4 @@
-package com.example.catalogue.catalogueservice.configuration;
+package com.example.catalogue.catalogueservice.config;
 
 import io.jaegertracing.internal.samplers.ProbabilisticSampler;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +16,8 @@ public class JaegerConfig {
         io.jaegertracing.Configuration.ReporterConfiguration reporterConfiguration =
                 io.jaegertracing.Configuration.ReporterConfiguration.fromEnv().withLogSpans(true);
         io.jaegertracing.Configuration
-                configuration = new io.jaegertracing.Configuration("catalogue").withSampler(samplerConfiguration)
-                                                                               .withReporter(reporterConfiguration);
+                configuration = new io.jaegertracing.Configuration("${spring.application.name}").withSampler(samplerConfiguration)
+                                                                      .withReporter(reporterConfiguration);
 
         return configuration.getTracer();
     }
