@@ -15,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -68,7 +67,7 @@ public class CategoryControllerTest {
     //TODO Спросить как лучше делать - через парсинг Json или десеарилизацию
     @Test
     public void getCategory() throws Exception {
-        Mockito.when(categoryServiceMock.getCategoryById(CategoryTestUtils.categoryServiceAnswer.getId()))
+        Mockito.when(categoryServiceMock.getCategory(CategoryTestUtils.categoryServiceAnswer.getId()))
                .thenReturn(CategoryTestUtils.categoryServiceAnswer);
 
         MvcResult mvcResult = mockMvc.perform(get(URI + "/{id}", CategoryTestUtils.categoryServiceAnswer.getId())

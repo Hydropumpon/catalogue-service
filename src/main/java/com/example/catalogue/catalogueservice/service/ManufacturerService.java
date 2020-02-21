@@ -19,5 +19,5 @@ public interface ManufacturerService {
 
     void deleteManufacturer(Integer id);
 
-    Manufacturer getManufacturerById(Integer id);
+    Manufacturer getManufacturer(Integer id);
 }

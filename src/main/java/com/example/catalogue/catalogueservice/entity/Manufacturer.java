@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -26,6 +27,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @EqualsAndHashCode
 @AllArgsConstructor
+@ToString
 public class Manufacturer {
     @Id
     @SequenceGenerator(name = "manufacturer_id_gen", sequenceName = "manufacturer_id_seq", allocationSize = 1)

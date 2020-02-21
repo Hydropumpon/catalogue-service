@@ -6,9 +6,10 @@ import com.example.catalogue.catalogueservice.exception.ErrorMessage;
 import com.example.catalogue.catalogueservice.exception.NotFoundException;
 import com.example.catalogue.catalogueservice.exception.ServiceErrorCode;
 import com.example.catalogue.catalogueservice.repository.CategoryRepository;
-import com.example.catalogue.catalogueservice.repository.ItemCategoryRepository;
 import com.example.catalogue.catalogueservice.service.CategoryService;
+import com.example.catalogue.catalogueservice.service.ItemCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,19 +23,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryRepository categoryRepository;
 
-    private ItemCategoryRepository itemCategoryRepository;
+    private ItemCategoryService itemCategoryService;
 
     @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository,
-                               ItemCategoryRepository itemCategoryRepository) {
+                               @Lazy ItemCategoryService itemCategoryService) {
         this.categoryRepository = categoryRepository;
-        this.itemCategoryRepository = itemCategoryRepository;
+        this.itemCategoryService = itemCategoryService;
     }
 
 
     @Override
     @Transactional(readOnly = true)
-    public Category getCategoryById(Integer id) {
+    public Category getCategory(Integer id) {
         return categoryRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
     }
@@ -55,7 +56,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category);
     }
 
-
     @Override
     @Transactional
     public Category updateCategory(Category category, Integer id) {
@@ -72,7 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void deleteCategory(Integer id) {
         categoryRepository.findById(id).map(category -> {
-            itemCategoryRepository.deleteAllByCategory(category);
+            itemCategoryService.deleteCategoriesByCategory(category);
             categoryRepository.delete(category);
             return Optional.empty();
         }).orElseThrow(() -> new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND));

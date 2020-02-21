@@ -16,7 +16,7 @@ public interface ItemService {
 
     Item updateItem(Item item, Integer id);
 
-    Item getItemById(Integer id);
+    Item getItem(Integer id);
 
     List<Item> getByCategory(String categoryName);
 
@@ -27,4 +27,6 @@ public interface ItemService {
     Optional<Item> getItemsByIdAndQuantity(Integer itemId, Integer quantity);
 
     void deleteItem(Integer id);
+
+    List<Item> getByName(String name);
 }

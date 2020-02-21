@@ -5,11 +5,11 @@ import com.example.catalogue.catalogueservice.entity.Manufacturer;
 import com.example.catalogue.catalogueservice.exception.ErrorMessage;
 import com.example.catalogue.catalogueservice.exception.NotFoundException;
 import com.example.catalogue.catalogueservice.exception.ServiceErrorCode;
-import com.example.catalogue.catalogueservice.repository.CategoryRepository;
-import com.example.catalogue.catalogueservice.repository.ItemCategoryRepository;
 import com.example.catalogue.catalogueservice.repository.ItemRepository;
+import com.example.catalogue.catalogueservice.service.ItemCategoryService;
 import com.example.catalogue.catalogueservice.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,17 +23,13 @@ public class ItemServiceImpl implements ItemService {
 
     private ItemRepository itemRepository;
 
-    private CategoryRepository categoryRepository;
-
-    private ItemCategoryRepository itemCategoryRepository;
+    private ItemCategoryService itemCategoryService;
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository,
-                           CategoryRepository categoryRepository,
-                           ItemCategoryRepository itemCategoryRepository) {
+                           @Lazy ItemCategoryService itemCategoryService) {
         this.itemRepository = itemRepository;
-        this.categoryRepository = categoryRepository;
-        this.itemCategoryRepository = itemCategoryRepository;
+        this.itemCategoryService = itemCategoryService;
     }
 
     @Override
@@ -65,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public Item getItemById(Integer id) {
+    public Item getItem(Integer id) {
         return itemRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND, ServiceErrorCode.NOT_FOUND));
     }
@@ -86,7 +82,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void deleteItemsByManufacturer(Manufacturer manufacturer) {
         List<Item> items = itemRepository.findAllByManufacturer(manufacturer);
-        items.forEach(item -> itemCategoryRepository.deleteAllByItem(item));
+        items.forEach(item -> itemCategoryService.deleteCategoriesByItem(item));
         itemRepository.deleteAll(items);
     }
 
@@ -99,8 +95,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void deleteItem(Integer id) {
-        Item item = this.getItemById(id);
-        itemCategoryRepository.deleteAllByItem(item);
+        Item item = this.getItem(id);
+        itemCategoryService.deleteCategoriesByItem(item);
         itemRepository.delete(item);
+    }
+
+    @Override
+    public List<Item> getByName(String name) {
+        return itemRepository.findByName(name);
     }
 }

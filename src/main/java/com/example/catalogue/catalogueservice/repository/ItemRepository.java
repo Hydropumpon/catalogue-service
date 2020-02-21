@@ -37,6 +37,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     Optional<Item> findByIdAndQuantityGreaterThanEqual(Integer itemId, Integer quantity);
 
 
-    Optional<Item> findByName(String name);
+    List<Item> findByName(String name);
 }
 

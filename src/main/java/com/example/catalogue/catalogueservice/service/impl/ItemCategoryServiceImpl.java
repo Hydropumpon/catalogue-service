@@ -39,7 +39,7 @@ public class ItemCategoryServiceImpl implements ItemCategoryService {
     @Override
     @Transactional
     public List<Category> addCategories(Integer itemId, List<Integer> categoryIds) {
-        Item item = itemService.getItemById(itemId);
+        Item item = itemService.getItem(itemId);
         List<Category> categoryList = categoryService.getCategoriesByIdIn(categoryIds);
         if (categoryIds.size() != categoryList.size()) {
             throw new NotFoundException(ErrorMessage.CATEGORY_NOT_FOUND, ServiceErrorCode.NOT_FOUND);
@@ -64,18 +64,32 @@ public class ItemCategoryServiceImpl implements ItemCategoryService {
 
     @Override
     @Transactional
-    public void deleteCategories(Integer itemId) {
-        Item item = itemService.getItemById(itemId);
+    public void deleteCategoriesByItemId(Integer itemId) {
+        Item item = itemService.getItem(itemId);
+        this.deleteCategoriesByItem(item);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCategoriesByItem(Item item) {
         itemCategoryRepository.deleteAllByItem(item);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Category> getItemCategories(Integer itemId) {
-        Item item = itemService.getItemById(itemId);
+        Item item = itemService.getItem(itemId);
         return itemCategoryRepository.findAllByItem(item)
                                      .stream()
                                      .map(ItemCategory::getCategory)
                                      .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional
+    public void deleteCategoriesByCategory(Category category) {
+        itemCategoryRepository.deleteAllByCategory(category);
+    }
+
+
 }

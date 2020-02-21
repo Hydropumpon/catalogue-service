@@ -25,7 +25,7 @@ public class ItemConverterDto implements ConverterDto<Item, ItemDto> {
                    .name(dto.getName())
                    .price(dto.getPrice())
                    .quantity(dto.getQuantity())
-                   .manufacturer(manufacturerService.getManufacturerById(dto.getManufacturerId()))
+                   .manufacturer(manufacturerService.getManufacturer(dto.getManufacturerId()))
                    .build();
     }
 

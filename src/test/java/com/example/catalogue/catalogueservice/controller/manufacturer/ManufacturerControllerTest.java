@@ -23,10 +23,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -139,7 +139,7 @@ public class ManufacturerControllerTest {
 
     @Test
     public void getManufacturedById() throws Exception {
-        Mockito.when(manufacturerServiceMock.getManufacturerById(Mockito.anyInt()))
+        Mockito.when(manufacturerServiceMock.getManufacturer(Mockito.anyInt()))
                .thenReturn(ManufacturerTestUtils.manufacturerServiceAnswer);
 
         MvcResult mvcResult =
@@ -154,6 +154,6 @@ public class ManufacturerControllerTest {
 
         assertThat(answer, is(ManufacturerTestUtils.manufacturerDtoAnswer));
 
-        Mockito.verify(manufacturerServiceMock, Mockito.times(1)).getManufacturerById(Mockito.anyInt());
+        Mockito.verify(manufacturerServiceMock, Mockito.times(1)).getManufacturer(Mockito.anyInt());
     }
 }

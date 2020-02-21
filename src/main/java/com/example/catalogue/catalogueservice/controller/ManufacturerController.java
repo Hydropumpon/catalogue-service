@@ -4,6 +4,7 @@ import com.example.catalogue.catalogueservice.converter.ConverterDto;
 import com.example.catalogue.catalogueservice.dto.ManufacturerDto;
 import com.example.catalogue.catalogueservice.entity.Manufacturer;
 import com.example.catalogue.catalogueservice.service.ManufacturerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,8 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.example.catalogue.catalogueservice.logging.messages.ManufacturerControllerLogMessages.*;
+
 @RestController
 @RequestMapping("catalogue/manufacturer")
+@Slf4j
 public class ManufacturerController {
 
     private ConverterDto<Manufacturer, ManufacturerDto> manufacturerConverterDto;
@@ -37,12 +41,14 @@ public class ManufacturerController {
 
     @PostMapping
     public ManufacturerDto addManufacturer(@RequestBody @Valid ManufacturerDto manufacturerDto) {
+        log.info(ADD_MANUFACTURER, manufacturerDto);
         Manufacturer manufacturer = manufacturerConverterDto.toEntity(manufacturerDto);
         return manufacturerConverterDto.toDto(manufacturerService.addManufacturer(manufacturer));
     }
 
     @GetMapping
     public List<ManufacturerDto> getManufacturers(Pageable pageable) {
+        log.info(GET_ALL_MANUFACTURERS);
         return manufacturerConverterDto.toDto(manufacturerService.getManufacturers(pageable).getContent());
     }
 
@@ -54,18 +60,21 @@ public class ManufacturerController {
     @PutMapping("/{id}")
     public ManufacturerDto updateManufacturer(@RequestBody @Valid ManufacturerDto manufacturerDto,
                                               @PathVariable("id") Integer id) {
+        log.info(UPDATE_MANUFACTURER, id, manufacturerDto);
         Manufacturer manufacturer = manufacturerConverterDto.toEntity(manufacturerDto);
         return manufacturerConverterDto.toDto(manufacturerService.updateManufacturer(manufacturer, id));
     }
 
     @DeleteMapping("/{id}")
     public void deleteManufacturer(@PathVariable(name = "id") Integer id) {
+        log.info(DELETE_MANUFACTURER, id);
         manufacturerService.deleteManufacturer(id);
     }
 
     @GetMapping("/{id}")
-    public ManufacturerDto getManufacturedById(@PathVariable("id") Integer id) {
-        return manufacturerConverterDto.toDto(manufacturerService.getManufacturerById(id));
+    public ManufacturerDto getManufacturer(@PathVariable("id") Integer id) {
+        log.info(GET_ONE_MANUFACTURER, id);
+        return manufacturerConverterDto.toDto(manufacturerService.getManufacturer(id));
     }
 
 }

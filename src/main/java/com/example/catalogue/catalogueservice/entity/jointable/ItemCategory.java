@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,7 @@ import javax.persistence.Table;
 @Table(name="item_category")
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class ItemCategory {
     @Id
     @SequenceGenerator(name = "item_category_id_gen", sequenceName = "item_category_id_seq", allocationSize = 1)
