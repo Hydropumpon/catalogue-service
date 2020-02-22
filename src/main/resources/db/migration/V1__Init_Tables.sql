@@ -2,19 +2,19 @@ create sequence hibernate_sequence;
 
 alter sequence hibernate_sequence owner to postgres;
 
-create sequence category_id_seq start with 1 increment by 1 cache 5;
+create sequence category_id_seq start with 1 increment by 1 cache 1;
 
 alter sequence category_id_seq owner to postgres;
 
-create sequence item_id_seq start with 1 increment by 1 cache 5;
+create sequence item_id_seq start with 1 increment by 1 cache 1;
 
 alter sequence item_id_seq owner to postgres;
 
-create sequence manufacturer_id_seq start with 1 increment by 1 cache 5;
+create sequence manufacturer_id_seq start with 1 increment by 1 cache 1;
 
 alter sequence manufacturer_id_seq owner to postgres;
 
-create sequence item_category_id_seq start with 1 increment by 1 cache 5;
+create sequence item_category_id_seq start with 1 increment by 1 cache 1;
 
 alter sequence item_category_id_seq owner to postgres;
 
