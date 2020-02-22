@@ -56,6 +56,7 @@ public class OrderCalcServiceImpl implements OrderCalcService {
                                                                                     .getPrice());
                                            })
                                            .reduce(BigDecimal.ZERO, BigDecimal::add));
+
         orderMessage.setState(OrderStates.APPROVED);
         return orderMessage;
     }
