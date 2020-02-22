@@ -41,7 +41,7 @@ public class OrderCalcServiceImpl implements OrderCalcService {
 
         if (itemPrices.size() != orderMessage.getOrderLineList().size()) {
             orderMessage.setAmount(BigDecimal.ZERO);
-            orderMessage.setState(OrderStates.REJECTED);
+            orderMessage.setState(OrderStates.REJECTED.name());
             return orderMessage;
         }
 
@@ -57,7 +57,7 @@ public class OrderCalcServiceImpl implements OrderCalcService {
                                            })
                                            .reduce(BigDecimal.ZERO, BigDecimal::add));
 
-        orderMessage.setState(OrderStates.APPROVED);
+        orderMessage.setState(OrderStates.APPROVED.name());
         return orderMessage;
     }
 }
